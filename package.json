@@ -1,0 +1,9 @@
+{
+  "name": "mcp-context-receipts",
+  "version": "0.1.0",
+  "description": "Privacy-first, tamper-evident receipts for MCP tool calls",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node src/server.js", "test": "node --test" }
+}
