@@ -1,9 +1,10 @@
 {
-  "name": "mcp-context-receipts",
-  "version": "0.1.0",
-  "description": "Privacy-first, tamper-evident receipts for MCP tool calls",
+  "name": "mcp-provenance-capsules",
+  "version": "0.2.0",
+  "description": "Portable, privacy-first evidence capsules for MCP tool calls",
   "type": "module",
   "license": "MIT",
   "engines": { "node": ">=20" },
-  "scripts": { "start": "node src/server.js", "test": "node --test" }
+  "bin": { "verify-capsule": "bin/verify-capsule.js" },
+  "scripts": { "start": "node src/server.js", "test": "node --test", "verify": "verify-capsule" }
 }
