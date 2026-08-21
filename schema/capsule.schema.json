@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/DARREN-2000/mcp-provenance-capsules/blob/main/schema/capsule.schema.json",
+  "title": "MCP Provenance Capsule",
+  "description": "A privacy-preserving cryptographic evidence record for one MCP tool call.",
+  "type": "object",
+  "required": ["version", "sequence", "timestamp", "server", "tool", "argumentsHash", "resultHash", "durationMs", "previousHash", "signature", "hash"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "server": { "type": "string", "minLength": 1 },
+    "tool": { "type": "string", "minLength": 1 },
+    "argumentsHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "resultHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "durationMs": { "type": "number", "minimum": 0 },
+    "previousHash": { "type": "string", "minLength": 1 },
+    "signature": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}
