@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" class="antialiased text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Provenance Capsules - Playground</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'media',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['Fira Code', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for webkit */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-indigo-500/30">
+  <!-- Top Navigation -->
+  <header class="sticky top-0 z-50 w-full backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 dark:bg-slate-900/75">
+    <div class="max-w-7xl mx-auto">
+      <div class="py-4 border-b border-slate-900/10 lg:px-8 lg:border-0 dark:border-slate-300/10 mx-4 lg:mx-0 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h1 class="text-lg font-semibold text-slate-900 dark:text-white">MCP Provenance Capsules</h1>
+        </div>
+        <div class="text-sm font-medium leading-6 text-slate-700 dark:text-slate-200">
+          Playground
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mb-10 max-w-3xl">
+      <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Interactive Playground</h2>
+      <p class="mt-4 text-lg text-slate-600 dark:text-slate-400">
+        Generate privacy-first cryptographic evidence capsules for MCP tool calls, and verify their integrity without exposing raw arguments or results. Since it uses the native Web Crypto API, it runs entirely in your browser.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+      
+      <!-- GENERATE SECTION -->
+      <section class="flex flex-col gap-6">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm ring-1 ring-slate-200 dark:ring-slate-700/50 overflow-hidden flex flex-col h-full">
+          <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/50">
+            <h3 class="text-base font-semibold leading-6 text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-xs font-medium text-indigo-600 dark:text-indigo-400">1</span>
+              Create a Capsule
+            </h3>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Simulate an MCP tool call payload</p>
+          </div>
+          
+          <div class="p-6 flex-1 flex flex-col gap-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="server" class="block text-sm font-medium leading-6 text-slate-900 dark:text-white">Server Name</label>
+                <input type="text" id="server" value="demo-server" class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-slate-900 dark:text-slate-100 dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              </div>
+              <div>
+                <label for="tool" class="block text-sm font-medium leading-6 text-slate-900 dark:text-white">Tool Name</label>
+                <input type="text" id="tool" value="fetch_data" class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-slate-900 dark:text-slate-100 dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              </div>
+            </div>
+            
+            <div>
+              <label for="arguments" class="block text-sm font-medium leading-6 text-slate-900 dark:text-white">Arguments (JSON)</label>
+              <textarea id="arguments" rows="3" class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-slate-900 dark:text-slate-100 dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm font-mono sm:leading-6">{
+  "query": "test",
+  "limit": 10
+}</textarea>
+            </div>
+            
+            <div>
+              <label for="result" class="block text-sm font-medium leading-6 text-slate-900 dark:text-white">Result (JSON)</label>
+              <textarea id="result" rows="3" class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-slate-900 dark:text-slate-100 dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm font-mono sm:leading-6">{
+  "items": [1, 2, 3]
+}</textarea>
+            </div>
+            
+            <div>
+              <label for="duration" class="block text-sm font-medium leading-6 text-slate-900 dark:text-white">Duration (ms)</label>
+              <input type="number" id="duration" value="42" class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-slate-900 dark:text-slate-100 dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            </div>
+
+            <div class="mt-auto pt-4">
+              <button id="btnCreate" class="w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-all flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                Generate Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VERIFY SECTION -->
+      <section class="flex flex-col gap-6">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm ring-1 ring-slate-200 dark:ring-slate-700/50 overflow-hidden flex flex-col h-full">
+          <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/50">
+            <h3 class="text-base font-semibold leading-6 text-slate-900 dark:text-white flex items-center gap-2">
+              <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-xs font-medium text-emerald-600 dark:text-emerald-400">2</span>
+              Verify the Capsule
+            </h3>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Review, tamper, and cryptographically verify</p>
+          </div>
+          
+          <div class="p-6 flex-1 flex flex-col gap-5">
+            <div class="flex-1 flex flex-col min-h-[300px]">
+              <label for="inputVerify" class="block text-sm font-medium leading-6 text-slate-900 dark:text-white">Generated Receipt (JSON)</label>
+              <textarea id="inputVerify" class="mt-2 block w-full flex-1 rounded-md border-0 py-3 px-4 text-slate-900 dark:text-slate-300 dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm font-mono sm:leading-6 transition-all" spellcheck="false" placeholder="Generate a receipt to see it here..."></textarea>
+            </div>
+
+            <div class="pt-2">
+              <button id="btnVerify" class="w-full rounded-md bg-slate-800 dark:bg-slate-700 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 dark:hover:bg-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 transition-all flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Verify Receipt
+              </button>
+            </div>
+
+            <div id="verifyResultContainer" class="hidden rounded-lg p-4 mt-2 border">
+              <div class="flex items-start gap-3">
+                <div id="verifyIcon" class="mt-0.5 flex-shrink-0"></div>
+                <div class="flex-1">
+                  <h4 id="verifyStatus" class="text-sm font-bold"></h4>
+                  <div class="mt-2 text-sm space-y-1" id="verifyDetails">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+  
+  <footer class="mt-auto py-8 border-t border-slate-900/5 dark:border-slate-700/50 text-center text-sm text-slate-500 dark:text-slate-400">
+    <p>Powered by Web Crypto API. No data leaves your browser.</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

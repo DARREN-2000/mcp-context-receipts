@@ -16,7 +16,7 @@ const chain = new ReceiptChain();
 let previous = "GENESIS";
 let valid = true;
 for (const capsule of capsules) {
-  const result = chain.verify(capsule, previous);
+  const result = await chain.verify(capsule, previous);
   console.log(JSON.stringify({ sequence: capsule.sequence, hash: capsule.hash, ...result }));
   valid &&= result.valid;
   previous = capsule.hash;

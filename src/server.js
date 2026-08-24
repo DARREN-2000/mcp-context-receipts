@@ -22,7 +22,7 @@ for await (const line of rl) {
     ] });
   } else if (method === "tools/call") {
     try {
-      const receipt = params.name === "create_receipt" ? chain.create(params.arguments || {}) : params.name === "verify_receipt" ? chain.verify(params.arguments?.receipt) : null;
+      const receipt = params.name === "create_receipt" ? await chain.create(params.arguments || {}) : params.name === "verify_receipt" ? await chain.verify(params.arguments?.receipt) : null;
       if (receipt === null) throw new Error("Unknown tool");
       send(id, { content: [{ type: "text", text: JSON.stringify(receipt) }], isError: false });
     } catch (error) { send(id, null, { code: -32602, message: error.message }); }
