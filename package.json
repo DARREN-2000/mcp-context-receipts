@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "mcp-provenance-capsules",
   "version": "0.3.0",
   "description": "Portable, privacy-first evidence capsules for MCP tool calls",

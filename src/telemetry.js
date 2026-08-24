@@ -1,4 +1,4 @@
-﻿import { trace } from "@opentelemetry/api";
+import { trace } from "@opentelemetry/api";
 
 export class TracedReceiptChain {
   constructor(chain, tracerName = "mcp-provenance") {
