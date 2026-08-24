@@ -38,3 +38,27 @@ test("verifies correctly even if JSON keys are reordered", async () => {
   
   assert.equal((await chain.verify(reorderedReceipt)).valid, true);
 });
+
+test("supports key rotation", async () => {
+  const chainV1 = new ReceiptChain("old-secret");
+  const receiptV1 = await chainV1.create({ server: "demo", tool: "test", arguments: {}, result: {} });
+  
+  const chainV2 = new ReceiptChain(["new-secret", "old-secret"]);
+  assert.equal((await chainV2.verify(receiptV1)).valid, true);
+  
+  // Continue chain manually for testing
+  chainV2.previousHash = receiptV1.hash;
+  chainV2.sequence = receiptV1.sequence;
+  const receiptV2 = await chainV2.create({ server: "demo", tool: "test", arguments: {}, result: {} });
+  assert.equal((await chainV1.verify(receiptV2, receiptV1.hash)).valid, false); // Old chain shouldn't verify new receipt
+  assert.equal((await chainV2.verify(receiptV2, receiptV1.hash)).valid, true); // New chain should verify new receipt
+});
+
+test("supports durable sinks", async () => {
+  let sinkCalledWith = null;
+  const sink = (receipt) => { sinkCalledWith = receipt; };
+  const chain = new ReceiptChain("secret", { sink });
+  
+  const receipt = await chain.create({ server: "demo", tool: "test", arguments: {}, result: {} });
+  assert.equal(sinkCalledWith, receipt);
+});

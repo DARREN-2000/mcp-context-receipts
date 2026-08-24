@@ -1,10 +1,36 @@
-{
+﻿{
   "name": "mcp-provenance-capsules",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Portable, privacy-first evidence capsules for MCP tool calls",
   "type": "module",
   "license": "MIT",
   "engines": { "node": ">=20" },
-  "bin": { "verify-capsule": "bin/verify-capsule.js" },
-  "scripts": { "start": "node src/server.js", "test": "node --test", "verify": "verify-capsule" }
+  "exports": {
+    ".": "./src/receipts.js",
+    "./telemetry": "./src/telemetry.js",
+    "./server": "./src/server.js",
+    "./server-sse": "./src/server-sse.js"
+  },
+  "bin": { 
+    "verify-capsule": "bin/verify-capsule.js",
+    "mcp-provenance-server": "src/server.js",
+    "mcp-provenance-server-sse": "src/server-sse.js"
+  },
+  "scripts": { 
+    "start": "node src/server.js", 
+    "start:sse": "node src/server-sse.js",
+    "test": "node --test", 
+    "verify": "verify-capsule" 
+  },
+  "peerDependencies": {
+    "@opentelemetry/api": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@opentelemetry/api": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@opentelemetry/api": "^1.9.0"
+  }
 }
