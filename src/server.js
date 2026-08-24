@@ -12,13 +12,13 @@ for await (const line of rl) {
   try { request = JSON.parse(line); } catch { continue; }
   const { id, method, params = {} } = request;
   if (method === "initialize") {
-    send(id, { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "mcp-context-receipts", version: "0.1.0" } });
+    send(id, { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "mcp-provenance-capsules", version: "0.3.0" } });
   } else if (method === "notifications/initialized") {
     continue;
   } else if (method === "tools/list") {
     send(id, { tools: [
-      { name: "create_receipt", description: "Create a privacy-first signed receipt for an MCP tool call.", inputSchema: { type: "object", required: ["server", "tool"], properties: { server: { type: "string" }, tool: { type: "string" }, arguments: { type: "object" }, result: {}, durationMs: { type: "number" } } } },
-      { name: "verify_receipt", description: "Verify a receipt's signature and content hash.", inputSchema: { type: "object", required: ["receipt"], properties: { receipt: { type: "object" } } } }
+      { name: "create_receipt", description: "Create a privacy-first signed receipt for an MCP tool call.", inputSchema: { type: "object", required: ["server", "tool"], properties: { server: { type: "string" }, tool: { type: "string" }, arguments: { type: "object" }, result: {}, durationMs: { type: "number" } } }, readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+      { name: "verify_receipt", description: "Verify a receipt's signature and content hash.", inputSchema: { type: "object", required: ["receipt"], properties: { receipt: { type: "object" } } }, readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
     ] });
   } else if (method === "tools/call") {
     try {

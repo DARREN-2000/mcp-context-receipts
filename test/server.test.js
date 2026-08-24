@@ -1,4 +1,4 @@
-﻿import test from "node:test";
+import test from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { join } from "node:path";
@@ -29,15 +29,22 @@ test("JSON-RPC server handles tool calls", async () => {
   send({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "create_receipt", arguments: { server: "demo", tool: "demo", arguments: {}, result: {} } } });
 
   await new Promise((resolve) => setTimeout(resolve, 500));
+  
+  const callResponse = responses.find(r => r.id === 2);
+  const receipt = JSON.parse(callResponse.result.content[0].text);
+  
+  send({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "verify_receipt", arguments: { receipt } } });
+  
+  await new Promise((resolve) => setTimeout(resolve, 500));
   child.kill();
 
   const initResponse = responses.find(r => r.id === 1);
   assert.ok(initResponse.result.capabilities.tools);
 
-  const callResponse = responses.find(r => r.id === 2);
-  assert.ok(callResponse.result.content);
-  
-  const receipt = JSON.parse(callResponse.result.content[0].text);
   assert.equal(receipt.server, "demo");
   assert.ok(receipt.signature);
+  
+  const verifyResponse = responses.find(r => r.id === 3);
+  const verifyResult = JSON.parse(verifyResponse.result.content[0].text);
+  assert.ok(verifyResult.valid);
 });

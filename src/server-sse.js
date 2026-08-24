@@ -1,4 +1,4 @@
-﻿import { createServer } from "node:http";
+import { createServer } from "node:http";
 import { ReceiptChain } from "./receipts.js";
 
 const chain = new ReceiptChain();
@@ -46,11 +46,11 @@ export const startSSEServer = (port = 3000) => {
           let responseError = null;
           
           if (method === "initialize") {
-            responseResult = { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "mcp-context-receipts", version: "0.1.0" } };
+            responseResult = { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: "mcp-provenance-capsules", version: "0.3.0" } };
           } else if (method === "tools/list") {
             responseResult = { tools: [
-              { name: "create_receipt", description: "Create a privacy-first signed receipt", inputSchema: { type: "object", required: ["server", "tool"], properties: { server: { type: "string" }, tool: { type: "string" }, arguments: { type: "object" }, result: {}, durationMs: { type: "number" } } } },
-              { name: "verify_receipt", description: "Verify a receipt", inputSchema: { type: "object", required: ["receipt"], properties: { receipt: { type: "object" } } } }
+              { name: "create_receipt", description: "Create a privacy-first signed receipt", inputSchema: { type: "object", required: ["server", "tool"], properties: { server: { type: "string" }, tool: { type: "string" }, arguments: { type: "object" }, result: {}, durationMs: { type: "number" } } }, readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+              { name: "verify_receipt", description: "Verify a receipt", inputSchema: { type: "object", required: ["receipt"], properties: { receipt: { type: "object" } } }, readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
             ] };
           } else if (method === "tools/call") {
             const receipt = params.name === "create_receipt" ? await chain.create(params.arguments || {}) : params.name === "verify_receipt" ? await chain.verify(params.arguments?.receipt) : null;
